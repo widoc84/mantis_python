@@ -1,23 +1,15 @@
 import random
-from model.proj import Proj
 
 def test_add_project(app):
-    wd = app.wd
-    wd.get(app.base_url)
-    app.session.login('administrator', 'root')
     old_proj = app.projects.get_proj()
     name = app.projects.create_type(6)
     des = app.projects.create_type(10)
-    tmp = app.projects.add_proj(name,des)
-    old_proj.append(tmp)
+    app.projects.add_proj(name,des)
     new_proj = app.projects.get_proj()
-    assert sorted(old_proj, key=Proj.id_or_nmx) == sorted(new_proj, key=Proj.id_or_nmx)
+    assert len(old_proj) + 1 == len(new_proj)
 
 def test_del_project(app):
-    wd = app.wd
-    wd.get(app.base_url)
-    app.session.login('administrator', 'root')
-    old_proj = app.projects.get_proj()
+    old_proj = app.soap.get_project('administrator')
     if len(old_proj) < 1:
         name = app.projects.create_type(6)
         des = app.projects.create_type(10)
@@ -25,6 +17,5 @@ def test_del_project(app):
         old_proj = app.projects.get_proj()
     name =  random.choice(old_proj)
     app.projects.del_proj(name)
-    old_proj.remove(name)
     new_proj = app.projects.get_proj()
-    assert sorted(old_proj, key=Proj.id_or_nmx) == sorted(new_proj, key=Proj.id_or_nmx)
+    assert len(old_proj) - 1 == len(new_proj)

@@ -1,10 +1,17 @@
-
+from sys import maxsize
 
 class Proj:
 
-    def __init__(self, name, status,enabled,view,description):
+    def __init__(self,id, name, description):
+        self.id = id
         self.name = name
-        self.status = status
-        self.enabled = enabled
-        self.view = view
         self.description = description
+
+    def __eq__(self, other):
+        return (self.name is None or other.name is None or self.name == other.name) and self.description == other.description
+
+    def id_or_nmx(self):
+        if self.id:
+            return int(self.id)
+        else:
+            return maxsize
