@@ -1,5 +1,6 @@
 from suds.client import Client
 from suds import WebFault
+from model.proj import Proj
 
 class SoapH:
 
@@ -14,7 +15,17 @@ class SoapH:
         except WebFault:
             return False
 
-    def get_project(self,username):
+    def get_project(self):
         client = Client("http://localhost/mantisbt/api/soap/mantisconnect.php?wsdl")
-#        project = client.service.mc_enum(username) client.
-        return project
+        test = client.service.mc_projects_get_user_accessible('administrator','root')
+        list = []
+        for i in test:
+            id = i.id
+            name = i.name
+            description = i.description
+            tmp_list = Proj(id=id, name=name, description=description)
+            list.append(tmp_list)
+        return list
+
+    def add(self,proj):
+        client = Client("http://localhost/mantisbt/api/soap/mantisconnect.php?wsdl")
